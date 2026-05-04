@@ -34,6 +34,5 @@ public class ValidarCodigoService {
         repositoryUser.deleteById(user.getId());
         return new ResponseCodigo(true, "Código validado com sucesso, parabéns");
 
-
     }
 }

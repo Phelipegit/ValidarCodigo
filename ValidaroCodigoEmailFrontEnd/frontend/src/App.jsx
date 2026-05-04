@@ -253,7 +253,7 @@ function TelaCodigo({ email, onSuccess, onVoltar }) {
       const res = await fetch("https://validarcodigo.onrender.com/api/validar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, codigoUsuario: codigoUsuario.trim() }),
+        body: JSON.stringify({ email, codigoUsuario: Number(codigoUsuario.trim()) }),
       });
       const data = await res.json();
       if (data.success) {
