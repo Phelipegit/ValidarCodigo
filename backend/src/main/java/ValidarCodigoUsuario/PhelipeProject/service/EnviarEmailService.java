@@ -1,50 +1,42 @@
 package ValidarCodigoUsuario.PhelipeProject.service;
 
-import jakarta.mail.*;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Properties;
+import java.io.IOException;
+
 
 @Service
 public class EnviarEmailService {
 
     @Value("${MAIL_PASSWORD}")
-    private String password;
+    private String apiKey;
 
     public void enviar(String destinatario, String mensagem) {
-        String remetente = "sideenvalorant@gmail.com";
-        String senha = password;
+        SendGrid sg = new SendGrid(apiKey);
 
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "465");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.ssl.enable", "true");           // SSL direto
-        props.put("mail.smtp.timeout", "10000");
-        props.put("mail.smtp.connectiontimeout", "10000");
+        Email from = new Email("phelipegithub@gmail.com");
+        Email to = new Email(destinatario);
+        Content content = new Content("text/plain", mensagem);
+        Mail mail = new Mail(from, "Validação", to, content);
 
-        Session session = Session.getInstance(props, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(remetente, senha);
-            }
-        });
+        Request request = new Request();
 
         try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(remetente));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
-            message.setSubject("Validação");
-            message.setText(mensagem);
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
 
-            Transport.send(message);
-            System.out.println("E-mail enviado!");
-
-
-        } catch (MessagingException e) {
+            Response response = sg.api(request);
+            System.out.println("Status: " + response.getStatusCode());
+        } catch (IOException e) {
             System.out.println("Erro ao enviar e-mail: " + e.getMessage());
         }
     }
