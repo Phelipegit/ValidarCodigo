@@ -191,7 +191,7 @@ function TelaEmail({ onSuccess }) {
     setLoading(true);
     setAlert(null);
     try {
-      const res = await fetch("/api/enviar", {
+      const res = await fetch("https://validarcodigo.onrender.com/api/enviar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim() }),
@@ -250,7 +250,7 @@ function TelaCodigo({ email, onSuccess, onVoltar }) {
     setLoading(true);
     setAlert(null);
     try {
-      const res = await fetch("/api/validar", {
+      const res = await fetch("https://validarcodigo.onrender.com/api/validar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, codigoUsuario: codigoUsuario.trim() }),

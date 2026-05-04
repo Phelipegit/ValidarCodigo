@@ -5,13 +5,11 @@ import ValidarCodigoUsuario.PhelipeProject.dto.RequestEmail;
 import ValidarCodigoUsuario.PhelipeProject.dto.ResponseCodigo;
 import ValidarCodigoUsuario.PhelipeProject.repository.service.GerarCodigoService;
 import ValidarCodigoUsuario.PhelipeProject.repository.service.ValidarCodigoService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "https://validarcodigo.vercel.app")
 public class CodigoController {
 
     private final GerarCodigoService gerarCodigoService;
