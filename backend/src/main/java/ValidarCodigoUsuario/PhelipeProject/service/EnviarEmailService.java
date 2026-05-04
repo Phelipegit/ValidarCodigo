@@ -1,8 +1,9 @@
-package ValidarCodigoUsuario.PhelipeProject.repository.service;
+package ValidarCodigoUsuario.PhelipeProject.service;
 
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Properties;
@@ -10,9 +11,12 @@ import java.util.Properties;
 @Service
 public class EnviarEmailService {
 
-    public static void enviar(String destinatario, String mensagem) {
+    @Value("${MAIL_PASSWORD}")
+    private String password;
+
+    public void enviar(String destinatario, String mensagem) {
         String remetente = "sideenvalorant@gmail.com";
-        String senha = "zmio grnh tsec hobp";
+        String senha = password;
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -31,7 +35,7 @@ public class EnviarEmailService {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(remetente));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
-            message.setSubject("Notificador de Datas");
+            message.setSubject("Validação");
             message.setText(mensagem);
 
             Transport.send(message);

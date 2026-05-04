@@ -1,4 +1,4 @@
-package ValidarCodigoUsuario.PhelipeProject.repository.service;
+package ValidarCodigoUsuario.PhelipeProject.service;
 
 import ValidarCodigoUsuario.PhelipeProject.dto.RequestCodigo;
 import ValidarCodigoUsuario.PhelipeProject.dto.ResponseCodigo;

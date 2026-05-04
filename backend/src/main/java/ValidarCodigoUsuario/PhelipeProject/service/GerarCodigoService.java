@@ -1,4 +1,4 @@
-package ValidarCodigoUsuario.PhelipeProject.repository.service;
+package ValidarCodigoUsuario.PhelipeProject.service;
 
 import ValidarCodigoUsuario.PhelipeProject.dto.Codigo;
 import ValidarCodigoUsuario.PhelipeProject.dto.RequestEmail;
@@ -12,9 +12,11 @@ import java.time.LocalDate;
 public class GerarCodigoService {
 
     private final RepositoryUser repositoryUser;
+    private final EnviarEmailService enviarEmailService;
 
-    public GerarCodigoService(RepositoryUser repositoryUser) {
+    public GerarCodigoService(RepositoryUser repositoryUser,EnviarEmailService enviarEmailService) {
         this.repositoryUser = repositoryUser;
+        this.enviarEmailService = enviarEmailService;
     }
 
     public void gerarESalvar(RequestEmail requestEmail) {
@@ -25,6 +27,6 @@ public class GerarCodigoService {
 
         repositoryUser.save(entityUser);
 
-        EnviarEmailService.enviar(requestEmail.getEmail(),"Seu código de verificação é " + codigo.getCodigo() + "\n" + "\n" + "\n" + LocalDate.now());
+        enviarEmailService.enviar(requestEmail.getEmail(),"Seu código de verificação é " + codigo.getCodigo() + "\n" + "\n" + "\n" + LocalDate.now());
     }
 }

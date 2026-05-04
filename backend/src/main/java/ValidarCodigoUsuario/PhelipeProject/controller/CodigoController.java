@@ -3,8 +3,8 @@ package ValidarCodigoUsuario.PhelipeProject.controller;
 import ValidarCodigoUsuario.PhelipeProject.dto.RequestCodigo;
 import ValidarCodigoUsuario.PhelipeProject.dto.RequestEmail;
 import ValidarCodigoUsuario.PhelipeProject.dto.ResponseCodigo;
-import ValidarCodigoUsuario.PhelipeProject.repository.service.GerarCodigoService;
-import ValidarCodigoUsuario.PhelipeProject.repository.service.ValidarCodigoService;
+import ValidarCodigoUsuario.PhelipeProject.service.GerarCodigoService;
+import ValidarCodigoUsuario.PhelipeProject.service.ValidarCodigoService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
