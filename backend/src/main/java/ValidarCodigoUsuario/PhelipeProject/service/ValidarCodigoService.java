@@ -28,9 +28,10 @@ public class ValidarCodigoService {
 
 
         if(!user.getCodigo().equals(requestCodigo.getCodigoUsuario())) {
+            repositoryUser.deleteById(user.getId());
             return new ResponseCodigo(false, "Código inválido, tente novamente");
         }
-        
+        repositoryUser.deleteById(user.getId());
         return new ResponseCodigo(true, "Código validado com sucesso, parabéns");
 
 
