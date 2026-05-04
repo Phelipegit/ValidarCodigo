@@ -20,15 +20,10 @@ public class ValidarCodigoService {
     public ResponseCodigo validarCodigo(RequestCodigo requestCodigo) {
         Optional<EntityUser> exist = repositoryUser.findByEmail(requestCodigo.getEmail());
 
-        if(exist.isEmpty()) {
-            return new ResponseCodigo(false, "Email inexistente");
-        }
-
         EntityUser user = exist.get();
 
 
         if(!user.getCodigo().equals(requestCodigo.getCodigoUsuario())) {
-            repositoryUser.deleteById(user.getId());
             return new ResponseCodigo(false, "Código inválido, tente novamente");
         }
         repositoryUser.deleteById(user.getId());
