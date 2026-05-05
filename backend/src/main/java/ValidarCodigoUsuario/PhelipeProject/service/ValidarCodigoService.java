@@ -24,7 +24,7 @@ public class ValidarCodigoService {
         EntityUser user = exist.get();
 
 
-        if(LocalDateTime.now().isAfter(user.getCreateAt().plusMinutes(100))) {
+        if(LocalDateTime.now().isAfter(user.getCreateAt().plusMinutes(2))) {
             return new ResponseCodigo(false,"Código expirado, tente novamente");
         }
 
