@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const styles = {
   wrapper: {
@@ -80,6 +80,10 @@ const styles = {
   },
   inputFocus: {
     borderColor: "#7ebe7e",
+  },
+  inputDisabled: {
+    opacity: 0.4,
+    cursor: "not-allowed",
   },
   btn: {
     width: "100%",
@@ -163,15 +167,20 @@ function IconCheck() {
   );
 }
 
-function InputField({ label, ...props }) {
+function InputField({ label, disabled, ...props }) {
   const [focused, setFocused] = useState(false);
   return (
     <div>
       <label style={styles.label}>{label}</label>
       <input
-        style={{ ...styles.input, ...(focused ? styles.inputFocus : {}) }}
+        style={{
+          ...styles.input,
+          ...(focused && !disabled ? styles.inputFocus : {}),
+          ...(disabled ? styles.inputDisabled : {}),
+        }}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        disabled={disabled}
         {...props}
       />
     </div>
@@ -245,8 +254,32 @@ function TelaCodigo({ email, onSuccess, onVoltar }) {
   const [codigoUsuario, setCodigoUsuario] = useState("");
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
+  const [segundos, setSegundos] = useState(120);
+  const [expirado, setExpirado] = useState(false);
+
+  useEffect(() => {
+    if (segundos <= 0) {
+      setExpirado(true);
+      return;
+    }
+    const timer = setTimeout(() => setSegundos((s) => s - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [segundos]);
+
+  const formatarTempo = (s) => {
+    const m = String(Math.floor(s / 60)).padStart(2, "0");
+    const sec = String(s % 60).padStart(2, "0");
+    return `${m}:${sec}`;
+  };
+
+  const corTimer =
+    segundos <= 30 ? "#e07070" : segundos <= 60 ? "#f0a050" : "#7ebe7e";
 
   async function handleSubmit() {
+    if (expirado) {
+      setAlert({ type: "error", message: "Código expirado. Volte e solicite um novo." });
+      return;
+    }
     if (!codigoUsuario.trim()) {
       setAlert({ type: "error", message: "Por favor, informe o código." });
       return;
@@ -282,6 +315,26 @@ function TelaCodigo({ email, onSuccess, onVoltar }) {
       <p style={styles.subtitle}>
         Enviamos um código para <span style={styles.emailHighlight}>{email}</span>
       </p>
+
+      <div style={{ textAlign: "center", marginBottom: "1.25rem" }}>
+        <span style={{ fontSize: "12px", color: "#666" }}>Código expira em </span>
+        <span style={{
+          fontSize: "18px",
+          fontWeight: "600",
+          color: corTimer,
+          fontVariantNumeric: "tabular-nums",
+          letterSpacing: "1px",
+        }}>
+          {formatarTempo(segundos)}
+        </span>
+      </div>
+
+      {expirado && (
+        <div style={styles.alertError}>
+          Código expirado. Volte e solicite um novo.
+        </div>
+      )}
+
       <Alert {...(alert || {})} message={alert?.message} />
       <InputField
         label="Código de verificação"
@@ -291,11 +344,12 @@ function TelaCodigo({ email, onSuccess, onVoltar }) {
         value={codigoUsuario}
         onChange={(e) => setCodigoUsuario(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+        disabled={expirado}
       />
       <button
-        style={{ ...styles.btn, ...(loading ? styles.btnDisabled : {}) }}
+        style={{ ...styles.btn, ...((loading || expirado) ? styles.btnDisabled : {}) }}
         onClick={handleSubmit}
-        disabled={loading}
+        disabled={loading || expirado}
       >
         {loading ? "Verificando..." : "Verificar código"}
       </button>

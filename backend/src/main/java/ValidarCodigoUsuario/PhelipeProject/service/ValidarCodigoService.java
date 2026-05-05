@@ -23,18 +23,19 @@ public class ValidarCodigoService {
 
         EntityUser user = exist.get();
 
+        try {
+            if (LocalDateTime.now().isAfter(user.getCreateAt().plusMinutes(2))) {
+                return new ResponseCodigo(false, "Código expirado, tente novamente");
+            }
 
-        if(LocalDateTime.now().isAfter(user.getCreateAt().plusMinutes(2))) {
-            return new ResponseCodigo(false,"Código expirado, tente novamente");
+
+            if (!user.getCodigo().equals(requestCodigo.getCodigoUsuario())) {
+                return new ResponseCodigo(false, "Código inválido, tente novamente");
+            }
+
+            return new ResponseCodigo(true, "Código validado com sucesso, parabéns");
+        }finally {
+            repositoryUser.deleteById(user.getId());
         }
-
-
-        if(!user.getCodigo().equals(requestCodigo.getCodigoUsuario())) {
-            return new ResponseCodigo(false, "Código inválido, tente novamente");
-        }
-
-        repositoryUser.deleteById(user.getId());
-        return new ResponseCodigo(true, "Código validado com sucesso, parabéns");
-
     }
 }
