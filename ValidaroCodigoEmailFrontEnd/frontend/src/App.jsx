@@ -18,6 +18,16 @@ const styles = {
     width: "100%",
     maxWidth: "400px",
   },
+  footer: {
+    position: "fixed",
+    bottom: "12px",
+    width: "100%",
+    textAlign: "center",
+    fontSize: "12px",
+    color: "#777",
+    letterSpacing: "0.08em",
+    opacity: 0.7,
+  },
   iconCircle: {
     width: "52px",
     height: "52px",
@@ -114,10 +124,6 @@ const styles = {
     cursor: "pointer",
     transition: "color 0.2s",
   },
-  divider: {
-    borderTop: "1px solid #222",
-    margin: "1.5rem 0",
-  },
   successIcon: {
     width: "64px",
     height: "64px",
@@ -177,7 +183,6 @@ function Alert({ type, message }) {
   return <div style={type === "error" ? styles.alertError : styles.alertSuccess}>{message}</div>;
 }
 
-// Tela 1 — Enviar e-mail
 function TelaEmail({ onSuccess }) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -236,7 +241,6 @@ function TelaEmail({ onSuccess }) {
   );
 }
 
-// Tela 2 — Verificar código
 function TelaCodigo({ email, onSuccess, onVoltar }) {
   const [codigoUsuario, setCodigoUsuario] = useState("");
   const [loading, setLoading] = useState(false);
@@ -276,8 +280,7 @@ function TelaCodigo({ email, onSuccess, onVoltar }) {
       </div>
       <h2 style={styles.heading}>Digite o código</h2>
       <p style={styles.subtitle}>
-        Enviamos um código para{" "}
-        <span style={styles.emailHighlight}>{email}</span>
+        Enviamos um código para <span style={styles.emailHighlight}>{email}</span>
       </p>
       <Alert {...(alert || {})} message={alert?.message} />
       <InputField
@@ -303,7 +306,6 @@ function TelaCodigo({ email, onSuccess, onVoltar }) {
   );
 }
 
-// Tela 3 — Sucesso
 function TelaSucesso({ message }) {
   return (
     <div style={styles.card}>
@@ -316,9 +318,8 @@ function TelaSucesso({ message }) {
   );
 }
 
-// Componente principal
 export default function VerificacaoEmail() {
-  const [tela, setTela] = useState("email"); // "email" | "codigo" | "sucesso"
+  const [tela, setTela] = useState("email");
   const [email, setEmail] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
@@ -330,9 +331,7 @@ export default function VerificacaoEmail() {
       />
       <div style={styles.wrapper}>
         {tela === "email" && (
-          <TelaEmail
-            onSuccess={(e) => { setEmail(e); setTela("codigo"); }}
-          />
+          <TelaEmail onSuccess={(e) => { setEmail(e); setTela("codigo"); }} />
         )}
         {tela === "codigo" && (
           <TelaCodigo
@@ -342,6 +341,10 @@ export default function VerificacaoEmail() {
           />
         )}
         {tela === "sucesso" && <TelaSucesso message={successMsg} />}
+      </div>
+
+      <div style={styles.footer}>
+        @Phelipe,2026
       </div>
     </>
   );
