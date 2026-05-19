@@ -21,10 +21,14 @@ public class ValidarCodigoService {
     public ResponseCodigo validarCodigo(RequestCodigo requestCodigo) {
         Optional<EntityUser> exist = repositoryUser.findByEmail(requestCodigo.getEmail());
 
+        if(exist.isEmpty()) {
+            throw new RuntimeException();
+        }
+
         EntityUser user = exist.get();
 
-        try {
             if (LocalDateTime.now().isAfter(user.getCreateAt().plusMinutes(2))) {
+                repositoryUser.deleteById(user.getId());
                 return new ResponseCodigo(false, "Código expirado, tente novamente");
             }
 
@@ -33,9 +37,7 @@ public class ValidarCodigoService {
                 return new ResponseCodigo(false, "Código inválido, tente novamente");
             }
 
-            return new ResponseCodigo(true, "Código validado com sucesso, parabéns");
-        }finally {
             repositoryUser.deleteById(user.getId());
+            return new ResponseCodigo(true, "Código validado com sucesso, parabéns");
         }
-    }
 }
